@@ -1,0 +1,11 @@
+# Settings
+.DS_Store
+.idea
+
+# Python environment
+venv 
+
+# Partial Solution
+solution.csv
+rl11849_solution.csv
+
