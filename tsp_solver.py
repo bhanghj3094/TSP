@@ -240,19 +240,27 @@ def check_file_format(file):
         return False
 
 
-def check_cli_input():
-    if len(sys.argv) < 3:
-        print("[Invalid argument] \n"
-              "Please run it with 'one' TSP instance file from: \n\n "
-              "    http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/index.html \n\n"
-              "(Ex) python solver.py burma14.tsp")
-        exit(0)
+# Also move functions in to TSP instances. 
+
+if __name__ == '__main__':
+    # Get dataset, Parse parameters
     parser = argparse.ArgumentParser()
-    # python tsp_solver.py --file rl11849.tsp --neighbours 50 --population 200
-    parser.add_argument("-f", "--file", help="file input")
-    parser.add_argument("-n", "--neighbour_size", default=50, help="get_neighbours() size for local search", type=int)
-    parser.add_argument("-p", "--population_size", default=200, help="population size for GA", type=int)
-    parser.add_argument("-limit", "--fitness_limit", default=math.inf, help="fitness function limits")
+
+    # How to run
+    # print("[Invalid argument] \n"
+    #       "Please run it with 'one' TSP instance file from: \n\n "
+    #       "    http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/index.html \n\n"
+    #       "ex) python tsp_solver.py")
+    # exit(0)
+
+    # python tsp_solver.py --mode GA --file rl11849.tsp --neighbour_size 50
+    parser.add_argument("--mode", "-m", default="GA", help="heuristic mode to solve TSP")
+    parser.add_argument("--file", "-f", default="rl11849.tsp", help="TSP file instance to solve (ex) data/a280.tsp")
+    # 2-opt
+    parser.add_argument("--neighbour_size", "-n", type=int, default=50, help="get_neighbours() size for local search")
+    # Genetic Algorithm
+    parser.add_argument("--population_size", "-p", type=int, default=200, help="population size for GA")
+    parser.add_argument("--fitness_limit", "-limit", default=math.inf, help="fitness function limits")
 
     # running with..
     args = parser.parse_args()
@@ -262,19 +270,15 @@ def check_cli_input():
         args.population_size,
     ))
 
+    # initialize tsp instance
+    tsp = TSP()
+
     # parse file..
     if not check_file_format(args.file):
         print("[Invalid data] \n"
               "Please check the instance file format from: \n\n"
               "    http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/index.html\n")
         exit(0)
-    else:
-        global fitness_limit
-        fitness_limit = float(args.fitness_limit)
-        return args.neighbour_size, args.population_size
-
-
-if __name__ == '__main__':
-    tsp = TSP()  # initialize tsp instance
-    neighbour_size, population_size = check_cli_input()  # parse our data
+    fitness_limit = float(args.fitness_limit)
+    neighbour_size, population_size = args.neighbour_size, args.population_size
     main()
