@@ -4,6 +4,7 @@
 
 # Python environment
 venv 
+__pycache__/
 
 # Partial Solution
 solution.csv
