@@ -10,31 +10,32 @@ def main():
     global tsp
 
     # Get dataset, Parse parameters
-    parser = argparse.ArgumentParser(description="Implement various heuristic methods to solve TSP")
+    parser = argparse.ArgumentParser(description="Implement various heuristic methods to solve TSP\n\n (Default) Genetic Algorithm, rl11849.tsp")
 
-    # How to run
-    # print("[Invalid argument] \n"
-    #       "Please run it with 'one' TSP instance file from: \n\n "
-    #       "    http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/index.html \n\n"
-    #       "ex) python tsp_solver.py")
-    # exit(0)
-
-    # python tsp_solver.py --mode GA --file rl11849.tsp --neighbour_size 50
-    parser.add_argument("--mode", "-m", default="GA", help="which heuristic method to solve TSP:\n Greedy, 2-opt, GA, ACO, PSO")
-    parser.add_argument("--file", "-f", default="data/rl11849.tsp", help="TSP file instance to solve (in data folder) (ex) -f a280.tsp")
-    # 2-opt
+    # (Default) python tsp_solver.py --method GA --instance data/rl11849.tsp --population_size 200
+    parser.add_argument("--method", "-m", default="GA", help="which heuristic method to solve TSP:\n Greedy, 2-opt, GA, ACO, PSO")
+    parser.add_argument("--file", "-f", default="data/rl11849.tsp", help="TSP file instance to solve (in data folder) (ex) data/a280.tsp")
+    # 2-opt Algorithm
     parser.add_argument("--neighbour_size", "-n", type=int, default=50, help="get_neighbours() size for local search")
     # Genetic Algorithm
     parser.add_argument("--population_size", "-p", type=int, default=200, help="population size for GA")
     parser.add_argument("--fitness_limit", "-limit", default=math.inf, help="fitness function limits")
 
-    # running with..
+    # Running with..
     args = parser.parse_args()
-    print("Running tsp of {}, neighbour size = {}, population size = {}".format(
-        args.file,
-        args.neighbour_size,
-        args.population_size,
-    ))
+    print("Running solver with.. {}, {}".format(args.method, args.file))
+    if args.method == "Greedy":
+        pass
+    elif args.method == "2-opt":
+        print("[Args] neighbour size: %s" % (args.neighbour_size))
+    elif args.method == "GA":
+        print("[Args] population: %d, fitness limit: %f" % (args.population_size, args.fitness_limit))
+    elif args.method == "ACO":
+        pass
+    elif args.method == "PCO":
+        pass
+    else:
+        pass
 
     # initialize tsp instance
     tsp = TSP()
@@ -77,7 +78,7 @@ def check_file_format(file):
     except ValueError:  # other Errors..?
         return False
 
-# Runs on >> python tsp_solver.py 
+# Runs on >> python tsp_solver.py
 # Do not run on >> import tsp_solver
 if __name__ == '__main__':
     main()
