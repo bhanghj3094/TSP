@@ -1,12 +1,11 @@
-# Settings
+# misc
 .DS_Store
 .idea
 
-# Python environment
-venv 
-__pycache__/
+# Python
+venv/
+*.pyc
 
 # Partial Solution
 solution.csv
 rl11849_solution.csv
-
