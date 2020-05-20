@@ -1,80 +1,83 @@
 import argparse
 import os
 import math
+from pprint import pprint
 from tsp import *
 
 
 def main():
-    # Get dataset, Parse parameters
-    parser = argparse.ArgumentParser(
-        description="Implement various heuristic methods to solve TSP\r\n\r\n"
-        "(Default) Genetic Algorithm, rl11849.tsp"
-    )
-
-    # (Default) python tsp_solver.py --method GA --instance data/rl11849.tsp --population_size 200
+    """
+    Entry point for running genetic algorithms. 
+    Implements various heuristic methods to solve 'Traveling Salesman Problem'.
+    (Default)
+        Method - Genetic Algorithm
+        Dataset - a280.tsp
+    Return. 
+    """
+    # Parameters
+    parser = argparse.ArgumentParser()
+    methods = "Greedy, 2-Opt, GA, ACO, PSO"
     parser.add_argument(
-        "--method",
-        "-m",
-        default="GA",
-        help="which heuristic method to solve TSP:\n Greedy, 2-Opt, GA, ACO, PSO",
+        "--method", default="GA", help="Heuristic methods: %s" % methods
     )
     parser.add_argument(
-        "--file",
-        "-f",
-        default="data/rl11849.tsp",
-        help="TSP file instance name to solve (in data folder) (ex) data/a280.tsp",
+        "--file", default="a280", help="Dataset in data/ folder (ex) a280, bier127, .."
     )
-    # 2-opt Algorithm
     parser.add_argument(
-        "--neighbour_size",
-        "-n",
+        "--neighbour_size", type=int, default=50, help="Neighbour size used for 2-Opt",
+    )
+    parser.add_argument(
+        "--population_size",
         type=int,
-        default=50,
-        help="get_neighbours() size for local search",
-    )
-    # Genetic Algorithm
-    parser.add_argument(
-        "--population_size", "-p", type=int, default=200, help="population size for GA"
+        default=200,
+        help="Population size used for Genetic Algorithm",
     )
     parser.add_argument(
         "--fitness_limit",
-        "-limit",
         type=float,
         default=math.inf,
-        help="fitness function limits",
+        help="Fitness evaluation limits used for Genetic Algorithm",
     )
-
-    # Modes, Params
     args = parser.parse_args()
+
+    # Resolve Abbreviations
+    white_space = "  "
+    parameters = white_space + "None"
     if args.method == "Greedy":
         method = "Greedy Search"
-        parameters = ""
     elif args.method == "2-Opt":
         method = "2-Optimization"
-        parameters = "neighbour size: %d" % (args.neighbour_size)
+        parameters = white_space + "(Neighbour Size) %d" % (args.neighbour_size)
     elif args.method == "GA":
         method = "Genetic Algorithm"
-        parameters = "population: %d, fitness limit: %f" % (
-            args.population_size,
-            args.fitness_limit,
+        parameters = (
+            white_space
+            + "(Population Size) %d\n" % args.population_size
+            + white_space
+            + "(Fitness Evaluation Limit) %f" % args.fitness_limit
         )
     elif args.method == "ACO":
         method = "Ant Colony Optimization"
-        parameters = ""
     elif args.method == "PCO":
         method = "Particle Swarm Optimization"
-        parameters = ""
     else:
-        print("Please check you method: one of .. Greedy, 2-Opt, GA, ACO, PSO")
+        print("Please check you method\nOne of .. %s" % methods)
         exit(0)
 
     # Running with..
-    print("Running solver with.. {}, {}".format(method, os.path.split(args.file)[1]))
-    if parameters != "":  # params
-        print("Parameters: " + parameters)
+    print(
+        "Running solver..\n"
+        + white_space
+        + "(Method)  %s\n" % method
+        + white_space
+        + "(Dataset) %s" % os.path.split(args.file)[1]
+    )
+    print("Parameters..\n" + parameters)
 
-    # Execute Optimization
-    coordinates, distances = parse_data(args.file)
+    # Parse Data
+    coordinates, distances = parse_data("data/" + args.file + ".tsp")
+
+    # Run
     tsp = TSP(coordinates, distances)
     tsp.optimize(method, args)
 
@@ -90,8 +93,8 @@ def parse_data(file_path):
             if line == "NODE_COORD_SECTION\n":  # starting point for coordinates
                 start = True
                 continue
+            line = line.strip()
             if line != "EOF" and start:
-                line = line.strip()
                 coordinate = line.split()
                 coordinates.append((float(coordinate[1]), float(coordinate[2])))
         f.close()

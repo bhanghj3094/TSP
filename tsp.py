@@ -1,18 +1,31 @@
 import random
+from two_opt import *
+from genetic_algorithm import *
 
 
 class TSP:
-    # n cities, euclidien coordinates x, y
+    """
+    Representation for Traveling Saleman Problem to solve. 
+    
+    (Coordinates) List of tuples of each node's x, y coordinate
+    (Distances)   Matrix n x n of distance, when n is number of node.
+    """
+
     def __init__(self, coordinates, distances):
-        self.coordinates = coordinates  # list of tuples of each node's x, y coordinate
-        self.distances = distances  # matrix n x n of distance.
+        """
+        For n cities, and euclidien coordinates x, y. 
+        """
+        self.coordinates = coordinates
+        self.distances = distances
 
     def optimize(self, method, args):
-        """ entry point to our implementation """
-        # Representation: [] -> the number in order of visited nodes
-        # Fitness Function: int -> the sum of root of all traveled values above.
-        # Operators: Random
+        """
+        Optimization for method. 
 
+        Representation: (list) -> Return the number of nodes(cities) in order of visit.
+        Fitness Function: (int) -> Return the square root of sum of all traveled distances above.
+        Operators: Random
+        """
         # starting representations
         start, start_fitness = make_unbiased_initial()
         # random restart, 2nd group for local search
