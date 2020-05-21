@@ -143,9 +143,9 @@ def break_condition(recent_bests, recent_best_fitnesses, loops):
     recent_best_fitnesses.pop(0)
     l = len(recent_best_fitnesses)
     improvements = (recent_best_fitnesses[0] - recent_best_fitnesses[l-1]) / recent_best_fitnesses[0]
-    # # messages..
-    # if loops % 500 == 0:
-    #     print("'Hang on..' Still improving at: %.4f%%" % (improvements*100))
+    # messages..
+    if loops % 500 == 0:
+        print("'Hang on..' Still improving at: %.4f%%" % (improvements*100))
     # if recent improvement goes below 0.05%, break
     if improvements < 0.0005:
         return True
@@ -245,7 +245,7 @@ def check_cli_input():
         print("[Invalid argument] \n"
               "Please run it with 'one' TSP instance file from: \n\n "
               "    http://elib.zib.de/pub/mp-testdata/tsp/tsplib/tsp/index.html \n\n"
-              "(Ex) python solver.py burma14.tsp")
+              "(Ex) python solver.py --file data/burma14.tsp")
         exit(0)
     parser = argparse.ArgumentParser()
     # python tsp_solver.py --file rl11849.tsp --neighbours 50 --population 200
